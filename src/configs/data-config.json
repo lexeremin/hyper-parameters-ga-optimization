@@ -1,0 +1,31 @@
+{
+  "DATASET_NAMES": [
+    "ECG200",
+    "ECG5000",
+    "Strawberry",
+    "Fish",
+    "Haptics",
+    "Plane",
+    "FacesUCR"
+  ],
+  "TRAIN_FILES": [
+    "../data/ECG200/ECG200_TRAIN.tsv",
+    "../data/ECG5000/ECG5000_TRAIN.tsv",
+    "../data/Strawberry/Strawberry_TRAIN.tsv",
+    "../data/Fish/Fish_TRAIN.tsv",
+    "../data/Haptics/Haptics_TRAIN.tsv",
+    "../data/Plane/Plane_TRAIN.tsv",
+    "../data/FacesUCR/FacesUCR_TRAIN.tsv"
+  ],
+  "TEST_FILES": [
+    "../data/ECG200/ECG200_TEST.tsv",
+    "../data/ECG5000/ECG5000_TEST.tsv",
+    "../data/Strawberry/Strawberry_TEST.tsv",
+    "../data/Fish/Fish_TEST.tsv",
+    "../data/Haptics/Haptics_TEST.tsv",
+    "../data/Plane/Plane_TEST.tsv",
+    "../data/FacesUCR/FacesUCR_TEST.tsv"
+  ],
+  "MAX_SEQUENCE_LENGTH_LIST": [96, 140, 235, 463, 1092, 144, 131],
+  "NUB_CLASSES_LIST": [2, 5, 2, 7, 5, 7, 14]
+}
