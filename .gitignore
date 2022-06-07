@@ -89,6 +89,7 @@ experiments/
 data/*
 
 #except these datasets
+!data/README.md
 !data/ECG200/
 !data/ECG5000/
 !data/Strawberry/
