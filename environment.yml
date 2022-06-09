@@ -1,0 +1,14 @@
+name: thesis
+channels:
+  - conda-forge
+dependencies:
+  - tensorflow-deps
+  - tqdm
+  - jupyter
+  - matplotlib
+  - pandas
+  - numpy
+  - scikit-learn
+  - streamlit
+  - bunch
+prefix: /venv
