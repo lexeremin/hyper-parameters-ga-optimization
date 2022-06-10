@@ -29,7 +29,7 @@ def data_loader(i = 0, data = {}):
             df[df.columns] = df[df.columns].astype(np.float32)
             Y_train = df[[0]].values
             nb_classes = len(np.unique(Y_train))
-            Y_train = (Y_train - Y_train.min()) / (Y_train.max() - Y_train.min()) * (nb_classes - 1)
+            Y_train = np.around((Y_train - Y_train.min()) / (Y_train.max() - Y_train.min()) * (nb_classes - 1))
             # drop labels column from train set X
             df.drop(df.columns[0], axis=1, inplace=True)
             X_train = df.values
@@ -41,7 +41,7 @@ def data_loader(i = 0, data = {}):
             df[df.columns] = df[df.columns].astype(np.float32)
             Y_test = df[[0]].values
             nb_classes = len(np.unique(Y_test))
-            Y_test = (Y_test - Y_test.min()) / (Y_test.max() - Y_test.min()) * (nb_classes - 1)
+            Y_test = np.around((Y_test - Y_test.min()) / (Y_test.max() - Y_test.min()) * (nb_classes - 1))
             # drop labels column from train set X
             df.drop(df.columns[0], axis=1, inplace=True)
             X_test = df.values
