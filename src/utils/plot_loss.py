@@ -1,15 +1,21 @@
 import matplotlib.pyplot as plt
 
 # Plot the validation and training data separately
-def plot_loss_curves(history, val=True):
+def plot_loss_curves(history, val=True, binary=False):
   """
   Returns separate loss curves for training and validation metrics.
   """ 
   loss = history.history['loss']
-  accuracy = history.history['accuracy']
+  if binary:
+    accuracy = history.history['binary_accuracy']
+  else:
+    accuracy = history.history['sparse_categorical_accuracy']
 
   if val:
-    val_accuracy = history.history['val_accuracy']
+    if binary:
+      val_accuracy = history.history['val_binary_accuracy']
+    else:  
+      val_accuracy = history.history['val_sparse_categorical_accuracy']
     val_loss = history.history['val_loss']
 
 

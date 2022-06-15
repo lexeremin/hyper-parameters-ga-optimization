@@ -7,7 +7,7 @@ class rnnModel(BaseModel):
     
     def lstm_layer(self, 
                     _layer,
-                    _units = 128, 
+                    _units = 32, 
                     _kernel_initializer = 'glorot_uniform',
                     _batch_norm = True,
                     _dropout = 0.0,
@@ -15,6 +15,8 @@ class rnnModel(BaseModel):
                     _activation = 'tanh',
                     _recurrent_activation = "sigmoid",
                     _return_sequences=False):
+        # if self.nclasses < 3:
+        #     _activation = 'sigmoid'
         self.layer = tf.keras.layers.LSTM(_units,
                         activation = _activation,
                         dropout = _dropout,
@@ -29,19 +31,23 @@ class rnnModel(BaseModel):
 
     def gru_layer(self, 
                     _layer,
-                    _units = 256, 
+                    _units = 32, 
                     _kernel_initializer = 'glorot_uniform',
                     _batch_norm = True,
                     _dropout = 0.0,
                     _recurrent_dropout = 0.0,
                     _activation = 'tanh',
-                    _recurrent_activation = "sigmoid"):
+                    _recurrent_activation = "sigmoid",
+                    _return_sequences=False):
+        # if self.nclasses < 3:
+        #     _activation = 'sigmoid'
         self.layer = tf.keras.layers.GRU( _units,
                         activation = _activation,
                         dropout = _dropout,
                         recurrent_activation = _recurrent_activation,
                         kernel_initializer = _kernel_initializer,
-                        recurrent_dropout = _recurrent_dropout
+                        recurrent_dropout = _recurrent_dropout,
+                        return_sequences=_return_sequences
                         )(_layer)
         if _batch_norm:
             self.layer = tf.keras.layers.BatchNormalization()(self.layer)

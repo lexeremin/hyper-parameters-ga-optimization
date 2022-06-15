@@ -9,13 +9,15 @@ class cnnModel(BaseModel):
     def conv1d_layer(self, 
                     _layer,
                     _filters = 32, 
-                    _kernel_size = 16, 
+                    _kernel_size = 4, 
                     _padding = 'same', 
                     _strides = 1,
                     _kernel_initializer = 'he_uniform',
                     _batch_norm = True,
                     _dropout = False,
                     _activation = 'relu'):
+        if self.nclasses < 3:
+            _activation = 'sigmoid'
         self.layer = tf.keras.layers.Conv1D(filters = _filters, 
                         kernel_size = _kernel_size,  
                         padding = _padding, 
