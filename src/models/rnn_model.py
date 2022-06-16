@@ -1,6 +1,6 @@
 import tensorflow as tf
 from models.base_model import BaseModel
-
+from math import floor
 class rnnModel(BaseModel):
     def __init__(self, seq_length, nclasses) -> None:
         super().__init__(seq_length, nclasses)    
@@ -52,4 +52,96 @@ class rnnModel(BaseModel):
         if _batch_norm:
             self.layer = tf.keras.layers.BatchNormalization()(self.layer)
         return self.layer
+
+    def model_generator(self, dataset, params):
+        self.layer=None
+        hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type = self.convert_params(params)
+        if layer_type == 'lstm':
+            self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
+            for i in range(1,len(hidden_layers)):
+                if i<len(hidden_layers)-1:
+                    self.lstm_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
+                else:
+                    self.lstm_layer(self.layer, _units=hidden_layers[i])
+        if layer_type == 'gru':
+            self.gru_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
+            for i in range(1,len(hidden_layers)):
+                if i<len(hidden_layers)-1:
+                    self.gru_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
+                else:
+                    self.gru_layer(self.layer, _units=hidden_layers[i])
+        self.add_pooling()
+        self.build_model()
+        if self.nclasses < 3:
+            self.compile_model(
+                _loss=tf.keras.losses.BinaryCrossentropy(), 
+                _optimizer=solver,
+                _learning_rate=learning_rate,
+                _lr_decay=lr_decay)
+        else:
+            self.compile_model(
+                _optimizer=solver,
+                _learning_rate=learning_rate,
+                _lr_decay=lr_decay)
+        self.model_train(
+            train_data = dataset["X_train"], 
+            train_labels = dataset["Y_train"],
+            test_data = dataset["X_test"], 
+            test_labels = dataset["Y_test"],
+            _callbacks = callback,
+            _epoches = epochs
+        )
+        self.model_test(
+            test_data = dataset["X_test"], 
+            test_lables = dataset["Y_test"]
+        )
+        return self.result[1]
+
+
+    def convert_params(self, params):
+        hidden_layers = [params[0]]
+        for i in range(1,5):
+            if params[i] > 0:
+                hidden_layers.append(params[i]) 
+            else:
+                break 
+        hidden_layers = [round(num) for num in hidden_layers ] 
+        hidden_layers.sort(reverse=True)
+        solver = [tf.keras.optimizers.Adam, tf.keras.optimizers.RMSprop, tf.keras.optimizers.SGD][floor(params[5])]
+        learning_rate = 10**(-floor(params[6]))
+        lr_decay = [True, False][round(params[7])]
+        callback = [tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5), None][round(params[8])]
+        epochs = round(params[9])
+        layer_type = ['lstm', 'gru'][round(params[10])]
+
+        return hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type
+
+    def format_params(self, params):
+        hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type = self.convert_params(params)
+        if callback:
+            callback = True
+        return "'hidden_layer_sizes'={}\n " \
+            "'solver'='{}'\n " \
+            "'learning_rate'='{}'\n " \
+            "'lr_decay'={}\n " \
+            "'callback'='{}'"\
+            "'epochs'='{}'"\
+            "'layer_type'='{}'"\
+            .format(hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type)
+
+'''
+boundaries for hyperparameters:
+----
+layer 1: [8 to 128]
+layer 2:  [8 to 128]
+layer 3: [8 to 128]
+layer 4: [8 to 64]
+layer 5: [8 to 32]
+solver: [Adam, RMSProps, SGD] as [0, 1, 2]
+learning_rate: [1-e6 to 1-e1] as [1,2,3,4,5,6]
+lr_decay: [constant, exponential] as [0,1]
+callback: [true, false]
+epochs: [20 to 50]
+layer_type: [lstm, gru] as [0,1]
+'''
    

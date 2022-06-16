@@ -21,9 +21,12 @@ class BaseModel(tf.keras.Model):
     def build_model(self) -> None:
         self.model = tf.keras.models.Model(inputs = self.input_layer, outputs = self.output_layer(self.layer))
 
-    def compile_model(self, _loss=tf.keras.losses.SparseCategoricalCrossentropy(), _optimizer=tf.keras.optimizers.Adam, _learning_rate=0.001, lr_decay=False) -> None:
+    def compile_model(self, _loss=tf.keras.losses.SparseCategoricalCrossentropy(), 
+                _optimizer=tf.keras.optimizers.Adam, 
+                _learning_rate=0.001, 
+                _lr_decay=False) -> None:
         
-        if lr_decay:
+        if _lr_decay:
             _learning_rate = tf.keras.optimizers.schedules.ExponentialDecay(
                     initial_learning_rate=_learning_rate,
                 decay_steps=10000,
@@ -68,3 +71,4 @@ class BaseModel(tf.keras.Model):
             return self.result[1]
         else:
             return None
+    

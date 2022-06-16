@@ -4,23 +4,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def class_distribution(data):
+def class_distribution(data, classname):
     _, train_counts = np.unique(np.around(data["Y_train"]), return_counts=True)
     _, test_counts = np.unique(np.around(data["Y_test"]), return_counts=True)
     print(train_counts, test_counts)
 
     processed_data=pd.DataFrame(
         {
-            "Y_train": train_counts,
-            "Y_test": test_counts
+            "Обучающая выборка": train_counts,
+            "Тестовая выборка": test_counts
         }, 
-        columns=["Y_train", "Y_test"]
+        columns=["Обучающая выборка", "Тестовая выборка"]
     )
     print(processed_data.head())
-    processed_data.plot.bar(rot=0, figsize=(16,10))
+    processed_data.plot.bar(rot=0, xlabel="Номер класса", ylabel="Размер выборки", title=classname)
     plt.show()
 
-def train_test_distribution(data):
+def train_test_distribution(data, classname):
 
     processed_data=pd.DataFrame(
         {
@@ -31,7 +31,7 @@ def train_test_distribution(data):
         columns=["Y_train", "Y_test"]
     )
     print(processed_data.head())
-    processed_data.plot.bar(rot=0, figsize=(16,10))
+    processed_data.plot.bar(rot=0, label=classname)
     plt.show()
 
 def main():

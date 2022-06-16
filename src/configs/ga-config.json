@@ -1,5 +1,8 @@
 {
-  "ga_params": {},
-  "hp_params": {},
-  "NUM_OF_PARAMS": 10
+  "POPULATION_SIZE": 20,
+  "P_CROSSOVER": 0.9,
+  "P_MUTATION": 0.5,
+  "MAX_GENERATIONS": 5,
+  "HALL_OF_FAME_SIZE": 3,
+  "CROWDING_FACTOR": 10.0
 }
