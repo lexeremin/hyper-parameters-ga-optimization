@@ -119,7 +119,7 @@ class GeneticSearch():
         print("Best solution: \n",
             self.model.format_params(self.hof.items[0]),
             "\n Accuracy = ",
-            self.hof.items[0].fitness.value[0])
+            self.model.model_generator(self.dataset,self.hof.items[0]))
 
     def ga_elitism(self, population, toolbox, cxpb, mutpb, ngen, stats=None,
              halloffame=None, verbose=__debug__):
@@ -133,7 +133,7 @@ class GeneticSearch():
             ind.fitness.values = fit
 
         if halloffame is None:
-            raise ValueError("halloffame parameter must not be empty!")
+            raise ValueError("halloffame is empty!")
 
         halloffame.update(population)
         hof_size = len(halloffame.items) if halloffame.items else 0
@@ -196,12 +196,7 @@ class GeneticSearch():
                                                       stats=self.stats,
                                                       halloffame=self.hof,
                                                       verbose=True)
+        # self.print_solution()
 
 
 
-def main():
-
-    ...
-
-if __name__ == "__main__":
-    main()

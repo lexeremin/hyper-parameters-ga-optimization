@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 # Plot the validation and training data separately
-def plot_loss_curves(history, val=True, binary=False):
+def plot_loss_curves(history, val=True, binary=False, fname=False):
   """
   Returns separate loss curves for training and validation metrics.
   """ 
@@ -22,19 +22,22 @@ def plot_loss_curves(history, val=True, binary=False):
   epochs = range(len(history.history['loss']))
 
   # Plot loss
-  plt.plot(epochs, loss, label='training_loss')
+  plt.plot(epochs, loss, label='Обучающая выборка')
   if val:
-    plt.plot(epochs, val_loss, label='val_loss')
-  plt.title('Loss')
-  plt.xlabel('Epochs')
+    plt.plot(epochs, val_loss, label='Тестовая выборка')
+  plt.title('Функция потерь')
+  plt.xlabel('число эпох')
   plt.legend()
-
   # Plot accuracy
+  if fname:
+    plt.savefig('./imgs/'+fname+'loss_opt.png')
   plt.figure()
-  plt.plot(epochs, accuracy, label='training_accuracy')
+  plt.plot(epochs, accuracy, label='Точность обучающей выборки')
   if val:
-    plt.plot(epochs, val_accuracy, label='val_accuracy')
-  plt.title('Accuracy')
-  plt.xlabel('Epochs')
+    plt.plot(epochs, val_accuracy, label='Точность тестовой выборки')
+  plt.title('Точность классификации')
+  plt.xlabel('число эпох')
   plt.legend()
+  if fname:
+    plt.savefig('./imgs/'+fname+'acc_opt.png')
   plt.show()

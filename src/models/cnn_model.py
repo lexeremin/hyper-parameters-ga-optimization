@@ -34,6 +34,7 @@ class cnnModel(BaseModel):
     def model_generator(self, dataset, params):
         self.layer=None
         self.model=None
+        self.output_layer = tf.keras.layers.Dense(self.nclasses, activation="softmax") if self.nclasses > 2 else tf.keras.layers.Dense(1, activation="sigmoid")
         hidden_layers, solver, learning_rate, lr_decay, callback, epochs, kernel_size, activation = self.convert_params(params)
         self.format_params(params)
         self.conv1d_layer(self.input_layer, 
@@ -70,6 +71,8 @@ class cnnModel(BaseModel):
             test_data = dataset["X_test"], 
             test_lables = dataset["Y_test"]
         )
+        self.model_predict(test_data = dataset["X_test"])
+        self.format_params(params)
         return self.result[1]
 
 
@@ -82,6 +85,9 @@ class cnnModel(BaseModel):
                 break 
         hidden_layers = [round(num) for num in hidden_layers]       
         hidden_layers.sort(reverse=True) 
+        for i in range(len(hidden_layers)):
+            if hidden_layers[i] <=0:
+                hidden_layers.pop(i)
         print("-------------",hidden_layers)
         solver = [tf.keras.optimizers.Adam, tf.keras.optimizers.RMSprop, tf.keras.optimizers.SGD][floor(params[5])]
         learning_rate = 10**(-floor(params[6]))

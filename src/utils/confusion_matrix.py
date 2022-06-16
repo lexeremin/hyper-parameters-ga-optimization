@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import itertools
 
-def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15): 
+def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15, fname=False): 
   """Makes a labelled confusion matrix comparing predictions and ground truth labels.
 
   If classes is passed, confusion matrix will be labelled, if not, integer class values
@@ -67,4 +67,9 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
   
   disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
   disp.plot()
+  plt.title('Матрица ошибок')
+  plt.xlabel('Предполагаемое значение')
+  plt.ylabel('Истенное значение')
+  if fname:
+    plt.figure('./imgs/'+fname+'cm_opt.png')
   plt.show()

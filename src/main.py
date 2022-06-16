@@ -61,6 +61,7 @@ def generate_cnn_model(model, dataset, params=None):
     # print(ts_config["NUB_CLASSES_LIST"][6])
     make_confusion_matrix(dataset["Y_test"], model.prediction)
     print(model.result[1])
+
     return model.result[1]
 
 def generate_rnn_model(model, dataset, params=None):
@@ -72,8 +73,8 @@ def generate_rnn_model(model, dataset, params=None):
     #     model.gru_layer(model.input_layer)
     #     for i in range(1):
     #         model.lstm_layer(model.layer)
-    model.lstm_layer(model.input_layer, _units=128, _return_sequences=True)
-    model.lstm_layer(model.layer, _units=128)
+    model.lstm_layer(model.input_layer, _units=128, )
+    # model.lstm_layer(model.layer, _units=128)
     # model.gru_layer(model.input_layer, _units=32, _return_sequences=True)
     # model.gru_layer(model.input_layer, _units=32)
     # for i in range(1):
@@ -131,26 +132,43 @@ def main():
         ]
 
     # EDA 
-    for i, dataset in enumerate(datasets):
-        class_distribution(dataset, ts_config['DATASET_NAMES'][i])
+    # for i, dataset in enumerate(datasets):
+    #     class_distribution(dataset, ts_config['DATASET_NAMES'][i])
         # train_test_distribution(dataset, ts_config['DATASET_NAMES'][i])
 
     # Generating baseline CNN and RNN models
-    # generate_cnn_model(cnn_models[1], datasets[1])
-    # generate_rnn_model(rnn_models[2], datasets[2])
+    # generate_cnn_model(cnn_models[3], datasets[3])
+    # generate_rnn_model(rnn_models[1], datasets[1])
 
     #Initializing GA solver
-    # ga = genetic_optimization.GeneticSearch(ga_config, 'CNN', cnn_models[1], datasets[1])
+    # NN_TYPE = "CNN"
+    # for i in range(len(datasets)):
+    #     fname = NN_TYPE+ts_config['DATASET_NAMES'][i]
+    #     ga = genetic_optimization.GeneticSearch(ga_config, NN_TYPE, cnn_models[i], datasets[i])
+    #     ga.initial_setup()
+    #     ga.create_population()
+    #     ga.define_operators()
+    #     ga.solver()
+    #     make_confusion_matrix(ga.dataset["Y_test"], ga.model.prediction, fname=fname)
+    #     if ga.model.nclasses < 3:
+    #         plot_loss_curves(ga.model.history, binary=True, fname=fname)
+    #     else:
+    #         plot_loss_curves(ga.model.history, fname=fname)
 
-    # ga.initial_setup()
-    # ga.create_population()
-    # ga.define_operators()
-    # ga.solver()
-    # make_confusion_matrix(ga.dataset["Y_test"], ga.model.prediction)
-    # if ga.model.nclasses < 3:
-    #     plot_loss_curves(ga.model.history, binary=True)
-    # else:
-    #     plot_loss_curves(ga.model.history)
+
+    # fname = NN_TYPE+ts_config['DATASET_NAMES'][i]
+
+    ga = genetic_optimization.GeneticSearch(ga_config, 'RNN', rnn_models[1], datasets[1])
+
+    ga.initial_setup()
+    ga.create_population()
+    ga.define_operators()
+    ga.solver()
+    make_confusion_matrix(ga.dataset["Y_test"], ga.model.prediction)
+    if ga.model.nclasses < 3:
+        plot_loss_curves(ga.model.history, binary=True)
+    else:
+        plot_loss_curves(ga.model.history)
 
     # # print(datasets[1]['X_train'][1])
     # # print(tf.signal.fft(datasets[1]['X_train'][3]))

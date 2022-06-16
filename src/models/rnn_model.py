@@ -55,6 +55,7 @@ class rnnModel(BaseModel):
 
     def model_generator(self, dataset, params):
         self.layer=None
+        self.output_layer = tf.keras.layers.Dense(self.nclasses, activation="softmax") if self.nclasses > 2 else tf.keras.layers.Dense(1, activation="sigmoid")
         hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type = self.convert_params(params)
         if layer_type == 'lstm':
             self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
@@ -70,7 +71,7 @@ class rnnModel(BaseModel):
                     self.gru_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
                 else:
                     self.gru_layer(self.layer, _units=hidden_layers[i])
-        self.add_pooling()
+        # self.add_pooling()
         self.build_model()
         if self.nclasses < 3:
             self.compile_model(
@@ -95,6 +96,8 @@ class rnnModel(BaseModel):
             test_data = dataset["X_test"], 
             test_lables = dataset["Y_test"]
         )
+        self.model_predict(test_data = dataset["X_test"])
+        self.format_params(params)
         return self.result[1]
 
 
@@ -107,6 +110,9 @@ class rnnModel(BaseModel):
                 break 
         hidden_layers = [round(num) for num in hidden_layers ] 
         hidden_layers.sort(reverse=True)
+        for i in range(len(hidden_layers)):
+            if hidden_layers[i] <=0:
+                hidden_layers.pop(i)
         solver = [tf.keras.optimizers.Adam, tf.keras.optimizers.RMSprop, tf.keras.optimizers.SGD][floor(params[5])]
         learning_rate = 10**(-floor(params[6]))
         lr_decay = [True, False][round(params[7])]

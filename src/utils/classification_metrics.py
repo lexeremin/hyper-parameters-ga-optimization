@@ -1,5 +1,8 @@
 # Function to evaluate: accuracy, precision, recall, f1-score
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
+import numpy as np
+from itertools import itertools
+import matplotlib.pyplot as plt
 
 def calculate_results(y_true, y_pred):
   """
@@ -60,8 +63,8 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
   
   # Label the axes
   ax.set(title="Confusion Matrix",
-         xlabel="Predicted label",
-         ylabel="True label",
+         xlabel="Предполагаемое значение",
+         ylabel="Истенное значение",
          xticks=np.arange(n_classes), # create enough axis slots for each class
          yticks=np.arange(n_classes), 
          xticklabels=labels, # axes will labeled with class names (if they exist) or ints
