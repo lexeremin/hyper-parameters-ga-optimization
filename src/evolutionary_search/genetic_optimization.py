@@ -29,18 +29,13 @@ layer_type: [lstm, gru] as [0,1]
 
 BOUNDS_CNN_LOW =  [ 8,  -32, -32, -48, -64,     0,     1,  0,  0,  10,  2, 0]
 BOUNDS_CNN_HIGH = [128,  128,  128,  64, 32, 2.999, 6.999,  1,  1,  50, 32, 1]
-BOUNDS_RNN_LOW =  [ 8,  -32, -32, -48, -64,     0,     1,  0,  0,  10,  0]
-BOUNDS_RNN_HIGH = [128,  128,  128,  64, 32, 2.999, 6.999,  1,  1,  50,  1]
+BOUNDS_RNN_LOW =  [ 8,  -32, -32, -32, -32,     0,     1,  0,  0,  10,  0]
+BOUNDS_RNN_HIGH = [128,  128,  0,   0,   0, 2.999, 6.999,  1,  1,  50,  1]
 
 class GeneticSearch():
-    def __init__(self, ga_config, nn_type, model, dataset) -> None: #save config params to the class object
-        # self.layer_type = ga_config['layer_type']
-        # self.layers = ga_config['layers']
-        # self.units = ga_config['units']
-        # self.activation = ga_config['activation']
-        # self.learing_rates = ga_config['learing_rates']
-        # self.epochs = ga_config['epochs']
-        self.nn_type = nn_type
+    def __init__(self, ga_config, model, dataset) -> None: #save config params to the class object
+
+        self.nn_type = ga_config['NN_TYPE']
 
         self.population_size = ga_config['POPULATION_SIZE']
         self.max_generations = ga_config['MAX_GENERATIONS']

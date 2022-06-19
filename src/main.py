@@ -65,15 +65,7 @@ def generate_cnn_model(model, dataset, params=None):
     return model.result[1]
 
 def generate_rnn_model(model, dataset, params=None):
-    # if ga_setup.layer_type == "LSTM":
-    #     model.lstm_layer(model.input_layer)
-    #     for i in range(1):
-    #         model.lstm_layer(model.layer)
-    # if ga_setup.layer_type == "GRU":
-    #     model.gru_layer(model.input_layer)
-    #     for i in range(1):
-    #         model.lstm_layer(model.layer)
-    model.lstm_layer(model.input_layer, _units=128, )
+    model.lstm_layer(model.input_layer, _units=128)
     # model.lstm_layer(model.layer, _units=128)
     # model.gru_layer(model.input_layer, _units=32, _return_sequences=True)
     # model.gru_layer(model.input_layer, _units=32)
@@ -107,44 +99,41 @@ def generate_rnn_model(model, dataset, params=None):
     make_confusion_matrix(dataset["Y_test"], model.prediction)
     print(model.result[1])
 
-def solver(model, dataset, hp_range):
-    ...
-
 def main():
-    # Loading configuration data
+    # ---Loading configuration data
     ga_config = get_ga_config()
     # hp_config = get_hp_config()
     ts_config = get_ts_data()
 
-    # Loading training and test datasets
+    # ---Loading training and test datasets + normalizing them
     datasets = [data_loader(i, ts_config) for i in range(len(ts_config['DATASET_NAMES']))]
 
-    # Initializing CNN and RNN models for each dataset with input_layer and output_layer
-    cnn_models = [cnn_model.cnnModel(
-        ts_config['MAX_SEQUENCE_LENGTH_LIST'][i],
-        ts_config['NUB_CLASSES_LIST'][i]
-        ) for i in range(len(ts_config['DATASET_NAMES']))
+    # ---Initializing CNN or RNN models for each dataset with input_layer and output_layer
+    if ga_config['NN_TYPE'] == 'CNN':
+        models = [cnn_model.cnnModel(
+            ts_config['MAX_SEQUENCE_LENGTH_LIST'][i],
+            ts_config['NUB_CLASSES_LIST'][i]
+            ) for i in range(len(ts_config['DATASET_NAMES']))
         ]
-    rnn_models = [rnn_model.rnnModel(
-        ts_config['MAX_SEQUENCE_LENGTH_LIST'][i],
-        ts_config['NUB_CLASSES_LIST'][i]
-        ) for i in range(len(ts_config['DATASET_NAMES']))
+    if ga_config['NN_TYPE'] == 'RNN':
+        models = [rnn_model.rnnModel(
+            ts_config['MAX_SEQUENCE_LENGTH_LIST'][i],
+            ts_config['NUB_CLASSES_LIST'][i]
+            ) for i in range(len(ts_config['DATASET_NAMES']))
         ]
-
-    # EDA 
+    # ---EDA for timeseries datasets
     # for i, dataset in enumerate(datasets):
     #     class_distribution(dataset, ts_config['DATASET_NAMES'][i])
         # train_test_distribution(dataset, ts_config['DATASET_NAMES'][i])
 
-    # Generating baseline CNN and RNN models
-    # generate_cnn_model(cnn_models[3], datasets[3])
-    # generate_rnn_model(rnn_models[1], datasets[1])
+    # ---Generating baseline CNN and RNN models
+    # generate_cnn_model(models[3], datasets[3])
+    # generate_rnn_model(models[1], datasets[1])
 
-    #Initializing GA solver
-    # NN_TYPE = "CNN"
+    # ---Automated optimization for all datasets
     # for i in range(len(datasets)):
-    #     fname = NN_TYPE+ts_config['DATASET_NAMES'][i]
-    #     ga = genetic_optimization.GeneticSearch(ga_config, NN_TYPE, cnn_models[i], datasets[i])
+    #     fname = ga_config['NN_TYPE']+ts_config['DATASET_NAMES'][i]
+    #     ga = genetic_optimization.GeneticSearch(ga_config, "CNN", models[i], datasets[i])
     #     ga.initial_setup()
     #     ga.create_population()
     #     ga.define_operators()
@@ -155,10 +144,9 @@ def main():
     #     else:
     #         plot_loss_curves(ga.model.history, fname=fname)
 
-
+    # ---Single dataset optimization
     # fname = NN_TYPE+ts_config['DATASET_NAMES'][i]
-
-    ga = genetic_optimization.GeneticSearch(ga_config, 'RNN', rnn_models[1], datasets[1])
+    ga = genetic_optimization.GeneticSearch(ga_config, models[1], datasets[1])
 
     ga.initial_setup()
     ga.create_population()
@@ -170,6 +158,7 @@ def main():
     else:
         plot_loss_curves(ga.model.history)
 
+    # ---Time series analysis
     # # print(datasets[1]['X_train'][1])
     # # print(tf.signal.fft(datasets[1]['X_train'][3]))
     # plt.plot(tf.signal.rfft(datasets[1]['X_train'][1]), label='fft')

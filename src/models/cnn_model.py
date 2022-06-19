@@ -36,6 +36,8 @@ class cnnModel(BaseModel):
         self.model=None
         self.output_layer = tf.keras.layers.Dense(self.nclasses, activation="softmax") if self.nclasses > 2 else tf.keras.layers.Dense(1, activation="sigmoid")
         hidden_layers, solver, learning_rate, lr_decay, callback, epochs, kernel_size, activation = self.convert_params(params)
+        print(self.format_params(params))
+
         self.format_params(params)
         self.conv1d_layer(self.input_layer, 
             _filters=hidden_layers[0], 
@@ -72,7 +74,8 @@ class cnnModel(BaseModel):
             test_lables = dataset["Y_test"]
         )
         self.model_predict(test_data = dataset["X_test"])
-        self.format_params(params)
+        # print(self.format_params(params))
+        print('accuracy: ' + self.result[1])
         return self.result[1]
 
 
@@ -88,7 +91,7 @@ class cnnModel(BaseModel):
         for i in range(len(hidden_layers)):
             if hidden_layers[i] <=0:
                 hidden_layers.pop(i)
-        print("-------------",hidden_layers)
+        # print("-------------",hidden_layers)
         solver = [tf.keras.optimizers.Adam, tf.keras.optimizers.RMSprop, tf.keras.optimizers.SGD][floor(params[5])]
         learning_rate = 10**(-floor(params[6]))
         lr_decay = [True, False][round(params[7])]
@@ -105,17 +108,17 @@ class cnnModel(BaseModel):
         if callback:
             callback = True
         return "'hidden_layer_sizes'={}\n " \
-            "'solver'='{}'\n " \
-            "'learning_rate'='{}'\n " \
+            "'solver'={}\n " \
+            "'learning_rate'={}\n " \
             "'lr_decay'={}\n " \
-            "'callback'='{}'"\
-            "'epochs'='{}'"\
-            "'kernel_size'='{}'"\
-            "'activation'='{}'"\
+            "'callback'={}\n"\
+            "'epochs'={}\n"\
+            "'kernel_size'={}\n"\
+            "'activation'={}\n"\
             .format(hidden_layers, solver, learning_rate, lr_decay, callback, epochs, kernel_size, activation)
 
 '''
-boundaries for hyperparameters:
+Reminder - boundaries for hyperparameters:
 ----
 layer 1: [8 to 128]
 layer 2:  [8 to 128]

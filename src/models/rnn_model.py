@@ -57,6 +57,8 @@ class rnnModel(BaseModel):
         self.layer=None
         self.output_layer = tf.keras.layers.Dense(self.nclasses, activation="softmax") if self.nclasses > 2 else tf.keras.layers.Dense(1, activation="sigmoid")
         hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type = self.convert_params(params)
+        print(self.format_params(params))
+
         if layer_type == 'lstm':
             self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
             for i in range(1,len(hidden_layers)):
@@ -97,7 +99,8 @@ class rnnModel(BaseModel):
             test_lables = dataset["Y_test"]
         )
         self.model_predict(test_data = dataset["X_test"])
-        self.format_params(params)
+        print('accuracy: ' + self.result[1])
+        # self.model.summary()
         return self.result[1]
 
 
@@ -127,16 +130,16 @@ class rnnModel(BaseModel):
         if callback:
             callback = True
         return "'hidden_layer_sizes'={}\n " \
-            "'solver'='{}'\n " \
-            "'learning_rate'='{}'\n " \
-            "'lr_decay'={}\n " \
-            "'callback'='{}'"\
-            "'epochs'='{}'"\
-            "'layer_type'='{}'"\
+            "'solver'={}\n " \
+            "'learning_rate'={}\n " \
+            "'lr_decay'={}\n" \
+            "'callback'={}\n"\
+            "'epochs'={}\n"\
+            "'layer_type'={}"\
             .format(hidden_layers, solver, learning_rate, lr_decay, callback, epochs, layer_type)
 
 '''
-boundaries for hyperparameters:
+Reminder - boundaries for hyperparameters:
 ----
 layer 1: [8 to 128]
 layer 2:  [8 to 128]
