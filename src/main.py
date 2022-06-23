@@ -146,17 +146,17 @@ def main():
 
     # ---Single dataset optimization
     # fname = NN_TYPE+ts_config['DATASET_NAMES'][i]
-    ga = genetic_optimization.GeneticSearch(ga_config, models[1], datasets[1])
+    ga = genetic_optimization.GeneticSearch(ga_config, models[3], datasets[3])
 
     ga.initial_setup()
     ga.create_population()
     ga.define_operators()
     ga.solver()
-    make_confusion_matrix(ga.dataset["Y_test"], ga.model.prediction)
-    if ga.model.nclasses < 3:
-        plot_loss_curves(ga.model.history, binary=True)
-    else:
-        plot_loss_curves(ga.model.history)
+    # make_confusion_matrix(ga.dataset["Y_test"], ga.model.prediction)
+    # if ga.model.nclasses < 3:
+    #     plot_loss_curves(ga.model.history, binary=True)
+    # else:
+    #     plot_loss_curves(ga.model.history)
 
     # ---Time series analysis
     # # print(datasets[1]['X_train'][1])

@@ -48,8 +48,8 @@ class GeneticSearch():
         self.hof = None
         # self.history = []
 
-        self.BOUNDS_LOW = BOUNDS_CNN_LOW if nn_type == "CNN" else BOUNDS_RNN_LOW
-        self.BOUNDS_HIGH = BOUNDS_CNN_HIGH if nn_type == "CNN" else BOUNDS_RNN_HIGH
+        self.BOUNDS_LOW = BOUNDS_CNN_LOW if self.nn_type == "CNN" else BOUNDS_RNN_LOW
+        self.BOUNDS_HIGH = BOUNDS_CNN_HIGH if self.nn_type == "CNN" else BOUNDS_RNN_HIGH
         self.NUM_PARAMS = len(self.BOUNDS_HIGH)
 
         self.model = model

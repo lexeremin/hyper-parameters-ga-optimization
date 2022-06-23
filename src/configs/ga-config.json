@@ -5,5 +5,5 @@
   "MAX_GENERATIONS": 3,
   "HALL_OF_FAME_SIZE": 3,
   "CROWDING_FACTOR": 10.0,
-  "NN_TYPE": "CNN"
+  "NN_TYPE": "RNN"
 }

@@ -75,7 +75,9 @@ class cnnModel(BaseModel):
         )
         self.model_predict(test_data = dataset["X_test"])
         # print(self.format_params(params))
-        print('accuracy: ' + self.result[1])
+        print('accuracy: ', self.result[1])
+        print('----END')
+
         return self.result[1]
 
 

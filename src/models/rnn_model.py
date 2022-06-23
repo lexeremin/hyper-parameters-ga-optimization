@@ -60,14 +60,20 @@ class rnnModel(BaseModel):
         print(self.format_params(params))
 
         if layer_type == 'lstm':
-            self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
+            if len(hidden_layers) < 2:
+                self.lstm_layer(self.input_layer, _units=hidden_layers[0])
+            else:
+                self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
             for i in range(1,len(hidden_layers)):
                 if i<len(hidden_layers)-1:
                     self.lstm_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
                 else:
                     self.lstm_layer(self.layer, _units=hidden_layers[i])
         if layer_type == 'gru':
-            self.gru_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
+            if len(hidden_layers) < 2:
+                self.gru_layer(self.input_layer, _units=hidden_layers[0])
+            else:
+                self.gru_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
             for i in range(1,len(hidden_layers)):
                 if i<len(hidden_layers)-1:
                     self.gru_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
@@ -99,7 +105,8 @@ class rnnModel(BaseModel):
             test_lables = dataset["Y_test"]
         )
         self.model_predict(test_data = dataset["X_test"])
-        print('accuracy: ' + self.result[1])
+        print('accuracy: ', self.result[1])
+        print('----END')
         # self.model.summary()
         return self.result[1]
 
