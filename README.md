@@ -1,6 +1,6 @@
 # RNN and CNN hyperparameter optimization with genetic algorithms using TF and DEAP
 
-> This is part of my Thesis work
+> This is part of my Thesis work. Some ideas were based on the book 'Hands-On Genetic Algorithms with Python' by  Eyal Wirsansky. You can use it for educational purpose.
 
 ## Setting up evironment and programm execution
 
