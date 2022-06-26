@@ -15,8 +15,6 @@ class rnnModel(BaseModel):
                     _activation = 'tanh',
                     _recurrent_activation = "sigmoid",
                     _return_sequences=False):
-        # if self.nclasses < 3:
-        #     _activation = 'sigmoid'
         self.layer = tf.keras.layers.LSTM(_units,
                         activation = _activation,
                         dropout = _dropout,
@@ -39,8 +37,6 @@ class rnnModel(BaseModel):
                     _activation = 'tanh',
                     _recurrent_activation = "sigmoid",
                     _return_sequences=False):
-        # if self.nclasses < 3:
-        #     _activation = 'sigmoid'
         self.layer = tf.keras.layers.GRU( _units,
                         activation = _activation,
                         dropout = _dropout,
@@ -107,7 +103,6 @@ class rnnModel(BaseModel):
         self.model_predict(test_data = dataset["X_test"])
         print('accuracy: ', self.result[1])
         print('----END')
-        # self.model.summary()
         return self.result[1]
 
 
