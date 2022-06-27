@@ -1,10 +1,10 @@
 from gc import callbacks
 import tensorflow as tf
 import numpy as np
-
+import datetime
 
 class BaseModel(tf.keras.Model):
-    def __init__(self, seq_length, nclasses) -> None:
+    def __init__(self, seq_length, nclasses, name) -> None:
         super(BaseModel, self).__init__()
         self.nclasses = nclasses
         self.seq_length = seq_length
@@ -16,6 +16,8 @@ class BaseModel(tf.keras.Model):
         self.history = None
         self.result = None
         self.prediction = None
+
+        self.experiment_name = name
 
     def add_pooling(self) -> None:
         self.layer = tf.keras.layers.GlobalAveragePooling1D()(self.layer)
@@ -46,7 +48,13 @@ class BaseModel(tf.keras.Model):
             metrics=[_metrics]
         )
 
-    def model_train(self, train_data, train_labels, test_data, test_labels, _epoches=30, _callbacks=None) -> None:
+    def model_train(self, train_data, train_labels, test_data, test_labels, _epoches=30, _callback=None) -> None:
+        _callbacks = []
+        if _callback == None:
+            _callbacks.append(self.create_tensorboard_callback('experiments'))
+        else:
+            _callbacks.append(self.create_tensorboard_callback('experiments'))
+            _callbacks.append(_callback)
         self.history = self.model.fit(
             train_data,
             train_labels,
@@ -70,3 +78,13 @@ class BaseModel(tf.keras.Model):
             return self.result[1]
         else:
             return None
+
+    def create_tensorboard_callback(self, dir_name):
+
+        log_dir = dir_name + "/" + self.experiment_name + "/" + \
+            datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(
+            log_dir=log_dir
+        )
+        print(f"Saving TensorBoard log files to: {log_dir}")
+        return tensorboard_callback

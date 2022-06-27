@@ -4,8 +4,8 @@ from math import floor
 
 
 class cnnModel(BaseModel):
-    def __init__(self, seq_length, nclasses) -> None:
-        super().__init__(seq_length, nclasses)
+    def __init__(self, seq_length, nclasses, name) -> None:
+        super().__init__(seq_length, nclasses, name)
 
     def conv1d_layer(self,
                      _layer,
@@ -68,7 +68,7 @@ class cnnModel(BaseModel):
             train_labels=dataset["Y_train"],
             test_data=dataset["X_test"],
             test_labels=dataset["Y_test"],
-            _callbacks=callback,
+            _callback=callback,
             _epoches=epochs
         )
         self.model_test(

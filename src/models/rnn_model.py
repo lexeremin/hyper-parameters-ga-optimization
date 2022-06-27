@@ -2,8 +2,8 @@ import tensorflow as tf
 from models.base_model import BaseModel
 from math import floor
 class rnnModel(BaseModel):
-    def __init__(self, seq_length, nclasses) -> None:
-        super().__init__(seq_length, nclasses)    
+    def __init__(self, seq_length, nclasses, name) -> None:
+        super().__init__(seq_length, nclasses, name)    
     
     def lstm_layer(self, 
                     _layer,
@@ -56,26 +56,14 @@ class rnnModel(BaseModel):
         print(self.format_params(params))
 
         if layer_type == 'lstm':
-            if len(hidden_layers) < 2:
-                self.lstm_layer(self.input_layer, _units=hidden_layers[0])
-            else:
-                self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
+            self.lstm_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
             for i in range(1,len(hidden_layers)):
-                if i<len(hidden_layers)-1:
-                    self.lstm_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
-                else:
-                    self.lstm_layer(self.layer, _units=hidden_layers[i])
+                self.lstm_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
         if layer_type == 'gru':
-            if len(hidden_layers) < 2:
-                self.gru_layer(self.input_layer, _units=hidden_layers[0])
-            else:
-                self.gru_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
+            self.gru_layer(self.input_layer, _units=hidden_layers[0], _return_sequences=True)
             for i in range(1,len(hidden_layers)):
-                if i<len(hidden_layers)-1:
-                    self.gru_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
-                else:
-                    self.gru_layer(self.layer, _units=hidden_layers[i])
-        # self.add_pooling()
+                self.gru_layer(self.layer, _units=hidden_layers[i], _return_sequences=True)
+        self.add_pooling()
         self.build_model()
         if self.nclasses < 3:
             self.compile_model(
@@ -93,7 +81,7 @@ class rnnModel(BaseModel):
             train_labels = dataset["Y_train"],
             test_data = dataset["X_test"], 
             test_labels = dataset["Y_test"],
-            _callbacks = callback,
+            _callback = callback,
             _epoches = epochs
         )
         self.model_test(
@@ -103,6 +91,7 @@ class rnnModel(BaseModel):
         self.model_predict(test_data = dataset["X_test"])
         print('accuracy: ', self.result[1])
         print('----END')
+        self.model.summary()
         return self.result[1]
 
 

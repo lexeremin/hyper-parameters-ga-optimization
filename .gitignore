@@ -97,3 +97,5 @@ data/*
 !data/Haptics/
 !data/Plane/
 !data/FacesUCR/
+
+src/experiments/*

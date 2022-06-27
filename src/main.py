@@ -1,3 +1,4 @@
+from asyncio import streams
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,7 +6,7 @@ import random
 import argparse
 
 
-from utils.config import get_ga_config, get_hp_config, get_ts_data
+from utils.config import get_ga_config, get_ts_data
 from utils.plot_loss import plot_loss_curves
 from utils.confusion_matrix import make_confusion_matrix
 from utils.eda import class_distribution, train_test_distribution
@@ -40,7 +41,7 @@ def generate_cnn_model(model, dataset, params=None):
         train_labels=dataset["Y_train"],
         test_data=dataset["X_test"],
         test_labels=dataset["Y_test"],
-        _callbacks=tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5)
+        _callback=tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5)
     )
     model.model_test(
         test_data=dataset["X_test"],
@@ -77,7 +78,7 @@ def generate_rnn_model(model, dataset, params=None):
         train_labels=dataset["Y_train"],
         test_data=dataset["X_test"],
         test_labels=dataset["Y_test"],
-        # _callbacks = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5)
+        # _callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5)
     )
     model.model_test(
         test_data=dataset["X_test"],
@@ -109,13 +110,15 @@ def main():
     if ga_config['NN_TYPE'] == 'CNN':
         models = [cnn_model.cnnModel(
             ts_config['MAX_SEQUENCE_LENGTH_LIST'][i],
-            ts_config['NUB_CLASSES_LIST'][i]
+            ts_config['NUB_CLASSES_LIST'][i],
+            ga_config['NN_TYPE']+'_'+ts_config['DATASET_NAMES'][i]
         ) for i in range(len(ts_config['DATASET_NAMES']))
         ]
     if ga_config['NN_TYPE'] == 'RNN':
         models = [rnn_model.rnnModel(
             ts_config['MAX_SEQUENCE_LENGTH_LIST'][i],
-            ts_config['NUB_CLASSES_LIST'][i]
+            ts_config['NUB_CLASSES_LIST'][i],
+            ga_config['NN_TYPE']+'_'+ts_config['DATASET_NAMES'][i]
         ) for i in range(len(ts_config['DATASET_NAMES']))
         ]
 
