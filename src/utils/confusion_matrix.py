@@ -21,5 +21,5 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
     plt.xlabel('Predicted classes')
     plt.ylabel('True classes')
     if fname:
-        plt.figure('./imgs/'+fname+'cm_opt.png')
+        plt.savefig('./imgs/'+fname+'cm_opt.png')
     plt.show()
