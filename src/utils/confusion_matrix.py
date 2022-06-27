@@ -13,7 +13,7 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
         labels = classes
     else:
         labels = np.arange(cm.shape[0])
-    print(labels)
+    # print(labels)
 
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
     disp.plot()

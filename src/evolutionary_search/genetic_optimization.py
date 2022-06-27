@@ -191,3 +191,4 @@ class GeneticSearch():
                                               stats=self.stats,
                                               halloffame=self.hof,
                                               verbose=True)
+        self.print_solution()
