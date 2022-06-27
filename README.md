@@ -58,10 +58,10 @@ The whole GA module consists of one file `./src/evolutionary_search/genetic_opti
 ## Visualizing experiments with TensorBoard
 
 All experiments are logging to the specific directory `./src/experiments/<NN_TYPE>_<DATASET_NAME>`.
-In order to use tensorboard inside root project directory you'll need to run following script:
+In order to use tensorboard inside root project directory, you'll need to run following script:
 
 ```bash
   tensorboard --logdir src/experiment
 ```
 
-Onces it's running you'll recieve message in your terminal with a localhost URL that allows to open TensorBoard tool.
+Once it's running you'll receive message in your terminal with a localhost URL that allows to open TensorBoard tool.
